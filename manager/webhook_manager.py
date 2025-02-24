@@ -1,5 +1,5 @@
 import httpx
-from upbit.shared_resources import WEBHOOK_URL
+from shared_resources import WEBHOOK_URL
 
 async def send_webhook(message):
     # 전송할 데이터

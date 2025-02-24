@@ -9,11 +9,10 @@ import aiohttp
 import certifi
 import jwt
 import uuid
-import requests
 from datetime import datetime
-from upbit.calculator.coins_indicators_calculator import calculate_indicators
-from upbit.calculator.target_calculator import classify_targets
-from upbit.manager.webhook_manager import send_webhook
+from calculator.coins_indicators_calculator import calculate_indicators
+from calculator.target_calculator import classify_targets
+from manager.webhook_manager import send_webhook
 
 
 async def update_prices(trading_dict, websocket, trading_lock):

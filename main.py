@@ -1,7 +1,7 @@
-from upbit.manager.websocket_manager import public_websocket_connect
-from upbit.manager.coin_data_manager import update_prices, update_indicators_periodically, update_trading_dict, update_wallet_realtime
-from upbit.trading import execute_trades
-from upbit.shared_resources import *
+from manager.websocket_manager import public_websocket_connect
+from manager.coin_data_manager import update_prices, update_indicators_periodically, update_trading_dict, update_wallet_realtime
+from trading import execute_trades
+from shared_resources import *
 
 async def main():
     """
