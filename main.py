@@ -2,6 +2,7 @@ from manager.websocket_manager import public_websocket_connect
 from manager.coin_data_manager import update_prices, update_indicators_periodically, update_trading_dict, update_wallet_realtime
 from trading import execute_trades
 from shared_resources import *
+from manager.webhook_manager import send_webhook
 
 async def main():
     """
@@ -18,19 +19,20 @@ async def main():
         거래 대상이 되는 코인과 현재가를 저장하는 딕셔너리
         구조: {코인명: 현재가}
         * target_dict 현재가도 1초마다 업데이트를 진행하면, 요청 수 초과 우려가 있음.
-        trading_dict에서 거래로 넘어가는 도중, trading_dict가 업데이트 됨
+        trading_dict에서 거래로 넘어가는 도중 trading_dict가 업데이트 됨.
+        따라서 현재가를 따로 업데이트 하지는 않고 코인 정보만 업데이트.
 
     trading_dict:
         target_dict에서 랜덤하게 선택된 최대 5개의 코인을 저장하는 딕셔너리
         구조: {코인명: 현재가}
-        코인 업데이트 주기 : 1초
+        코인 업데이트 주기 : 3초
         현재가 업데이트 주기 : 1초
 
     wallet_dict:
         매수한 코인의 내역을 기록하는 딕셔너리
         구조: {코인명: [매수 평균 가격, 매수 수량]}
 
-    ACCESS_KEY, SECRET_KEY: 환경 변수로 저장된 키 값 입니다.
+    ACCESS_KEY, SECRET_KEY: 환경 변수로 저장된 키 값
     """
 
     # 웹소켓 연결 (한번만 생성)
@@ -64,4 +66,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Program terminated by user")

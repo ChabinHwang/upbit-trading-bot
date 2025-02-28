@@ -8,3 +8,4 @@ tulipy
 urllib3
 uuid
 websockets
+dotenv

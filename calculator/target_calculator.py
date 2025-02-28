@@ -13,6 +13,7 @@ def process_coin(coin, values, target_dict, lock):
       2. T-1 20 이동평균과 T-1 100 VWMA가 T-1 종가보다 낮아야 함.
       3. T-1 거래량이 T-2 거래량의 3배보다 커야 함.
       4. 현재가가 T-1 종가보다 높아야 함.
+      5. T-1 거래량 x T-1 종가 > 30_000_000
     """
     # 각 값 추출
     t2_close    = values[0]
@@ -30,9 +31,10 @@ def process_coin(coin, values, target_dict, lock):
     condition2 = (t1_ma20 < t1_close) and (t1_vwma100 < t1_close)
     condition3 = t1_volume > 3 * t2_volume
     condition4 = current_price > t1_close
+    condition5 = t1_volume * t1_close > 30_000_000
 
     # 모든 조건을 만족하면 target_dict에 추가
-    if condition1 and condition2 and condition3 and condition4:
+    if condition1 and condition2 and condition3 and condition4 and condition5:
         with lock:
             target_dict[coin] = current_price
 

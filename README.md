@@ -1,4 +1,4 @@
-# Upbit Trading Bot v1.1.0
+# Upbit Trading Bot v1.2.1
 
 #### 업비트 서버와 통신하며 조건이 충족되면 자동으로 거래를 진행하는 거래 봇 입니다
 - 업비트 서버와 API와 Websocket 통신을 통해 코인들 정보와 거래 요청을 보냅니다.
@@ -9,7 +9,11 @@
 
 ---
 
-### 🚑 [v1.1.1] - 2025-02-25
+#### ✨ [v1.2.1] - 2025-02-27
+- `.env`를 활용해 도커 파일에 키 값들을 명시하는 방법에서 다른 방식으로 변환
+- 거래 전략 일부 수정. 매수, 매도 조건 추가(변경)
+
+#### 🚑 [v1.1.1] - 2025-02-25
 - upbit 패키지 제거로 인해 함수 import 경로 수정
 - `requirements.txt` jwt를 pyjwt로 수정
 
@@ -26,7 +30,7 @@
 
 
 ## 📘설치 방법
-> Docker 이미지 생성에 필요한 txt와 Dockerfile내용. 이후 이미지를 만들어 배포.
+> Docker 이미지 생성에 필요한 txt와 Dockerfile, env 내용. 이후 이미지를 만들어 배포.
 
 #### ❗유의 사항 : 업비트 API에 봇이 돌아갈 서버 IP를 꼭 추가해줘야 오류가 발생하지 않습니다.
 
@@ -57,15 +61,19 @@ COPY . ./
 # 파이썬 패키지 설치
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 환경 변수 설정
-ENV ACCESS_KEY "{Upbit Key}"
-ENV SECRET_KEY "{Upbit Key}"
-ENV WEBHOOK_URL "{Upbit Key}"
+# .env 파일 복사
+COPY .env .
 
 # 컨테이너 실행 명령어
 CMD ["python", "main.py"]
 ```
-
+#### `.env`
+```
+ACCESS_KEY={ACCESS_KEY 설정}
+SECRET_KEY={SECRET_KEY 설정}
+WEBHOOK_URL={WEBHOOK_URL 설정}
+PURCHASE_VOLUME={PURCHASE_VOLUME 설정}
+```
 
 ## ⚙️ 시스템 구조
 

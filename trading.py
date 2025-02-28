@@ -8,6 +8,7 @@ import aiohttp
 import certifi
 import jwt
 from manager.webhook_manager import send_webhook
+from shared_resources import PURCHASE_VOLUME
 
 
 async def order(ACCESS_KEY, SECRET_KEY, coin, type, volume):
@@ -84,12 +85,15 @@ async def process_trade(ACCESS_KEY, SECRET_KEY, coin, trading_dict, indicators_d
         구매 금액
     err_flag:
         잔고부족, 시간 초과 등의 문제 발생 여부 flag
+
+    매수 조건 : T-1 지표들 중 높은 값보다 1% 이상 현재가가 높은 경우
+    매도 조건 : T-1 지표들 중 높은 값보다 현재가가 낮은 경우
     """
     print(f"[{datetime.now()}] {coin} 거래 시작")
     start_time = time.time()
 
-    duration = 60
-    purchase_volume = 8_000
+    duration = 50
+    purchase_volume = PURCHASE_VOLUME
     err_flag = False
 
     # 거래 조건(T-1의 지표들보다 현재가가 1% 이상 높음) 부합 확인, 거래 요청, 제한 시간 초과시 거래 종료
@@ -107,7 +111,7 @@ async def process_trade(ACCESS_KEY, SECRET_KEY, coin, trading_dict, indicators_d
                 print(f"[{datetime.now()}] {coin} 매수 실패, 서버 오류 메세지 수신")
             else:
                 message = f"{coin} 매수 완료"
-                print(f"[{datetime.now()}]" , message)
+                print(f"[{datetime.now()}]", message)
                 asyncio.create_task(send_webhook(message))
             break
         await asyncio.sleep(1)

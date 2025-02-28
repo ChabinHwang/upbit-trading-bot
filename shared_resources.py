@@ -1,5 +1,8 @@
 import asyncio
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # .env 파일 로드
 
 # 공유 자원 (각 Task들이 사용하는 데이터)
 indicators_dict = {}

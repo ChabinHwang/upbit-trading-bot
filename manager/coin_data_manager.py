@@ -39,14 +39,15 @@ async def update_prices(trading_dict, websocket, trading_lock):
                 # 오류 발생시 웹훅으로 전달
                 except Exception as e:
                     message_snd = f"❌ 구독 메시지 전송 실패: "
-                    print(f"[{datetime.now()}]", message_snd, "{e} 1초 뒤 재시도합니다")
-                    error_send_limit-=1
+                    error_send_limit -= 1
 
                     if error_send_limit == 0:
                         message_snd_webhook = f"❌ 구독 메시지 전송 실패: {e}. 프로그램을 종료합니다"
                         await send_webhook(message_snd_webhook)
 
                         sys.exit(0)
+                    message = f"[{datetime.now()}]" + message_snd + f"{e} 1초 뒤 재시도합니다"
+                    await send_webhook(message)
 
                     await asyncio.sleep(1)
                     continue
@@ -65,16 +66,18 @@ async def update_prices(trading_dict, websocket, trading_lock):
                     except Exception as e:
                         message_recv = f"⚠️ 웹소켓 데이터 수신 오류: {e}"
                         print(f"[{datetime.now()}]", message_recv)
-                        error_rcv_limit-=1
+                        error_rcv_limit -= 1
 
                         if error_rcv_limit == 0:
                             message_recv_webhook = f"⚠️ 웹소켓 데이터 수신 오류: {e}. 프로그램을 종료합니다"
                             await send_webhook(message_recv_webhook)
 
                             sys.exit(0)
+                        message = f"[{datetime.now()}]" + message_snd + f"{e} 1초 뒤 재시도합니다"
+                        await send_webhook(message)
+                        continue
 
                 error_rcv_limit = 100
-
 
                 # print(f"[{datetime.now()}] trading_dict 업데이트 완료.")
             # else:
