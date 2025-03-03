@@ -87,7 +87,10 @@ async def process_trade(ACCESS_KEY, SECRET_KEY, coin, trading_dict, indicators_d
         잔고부족, 시간 초과 등의 문제 발생 여부 flag
 
     매수 조건 : T-1 지표들 중 높은 값보다 1% 이상 현재가가 높은 경우
-    매도 조건 : T-1 지표들 중 높은 값보다 현재가가 낮은 경우
+    매도 조건 : 아래 조건들 중 하나라도 부합하는 경우
+        [T-1 지표들 중 높은 값보다 현재가가 낮은 경우]
+        [현재가가 구매 가격보다 2%이상 높은 경우]
+        [현재가가 구매가보다 1%이상 낮은 경우]
     """
     print(f"[{datetime.now()}] {coin} 거래 시작")
     start_time = time.time()
@@ -124,7 +127,7 @@ async def process_trade(ACCESS_KEY, SECRET_KEY, coin, trading_dict, indicators_d
             if coin in wallet_dict and wallet_dict[coin] is not None:
                 coin_wallet_list = wallet_dict[coin]
                 break
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(1)
 
         avg_buy_price = coin_wallet_list[0]
         balance = coin_wallet_list[1]
@@ -133,8 +136,12 @@ async def process_trade(ACCESS_KEY, SECRET_KEY, coin, trading_dict, indicators_d
         while True:
             price = trading_dict.get(coin)  # 실시간 현재가 - 구조상 trading_dict 에 키값 coin 이 반드시 존재
 
+            condition1 = price < max(indicators_dict.get(coin)[5], indicators_dict.get(coin)[7])
+            condition2 = avg_buy_price * 1.03 < price
+            condition3 = price < avg_buy_price * 0.99
+
             # 매도 조건 부합 확인시 매도
-            if price < max(indicators_dict.get(coin)[5], indicators_dict.get(coin)[7]):
+            if condition1 or condition2 or condition3:
                 await order(ACCESS_KEY, SECRET_KEY, coin, "ask", balance)
                 print(f"[{datetime.now()}] {coin} 매도 완료")
                 break

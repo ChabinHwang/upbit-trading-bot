@@ -252,7 +252,7 @@ async def update_wallet_realtime(ACCESS_KEY, SECRET_KEY, wallet_dict):
             coin_name = f"KRW-{currency}"
 
             # wallet_dict에 {코인명: [매수 평균 가격, 매수 수량]} 형식으로 저장
-            wallet_dict[coin_name] = [avg_buy_price, balance]
+            wallet_dict[coin_name] = [float(avg_buy_price), balance]
 
         # print(f"wallet_dict [{', '.join(wallet_dict.keys())}] 업데이트 완료")
 

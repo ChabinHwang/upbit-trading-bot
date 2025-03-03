@@ -1,8 +1,11 @@
+import asyncio
 import sys
 import certifi
 import websockets
 from datetime import datetime
 import ssl
+from manager.webhook_manager import send_webhook
+
 
 async def public_websocket_connect():
     """"
@@ -12,8 +15,12 @@ async def public_websocket_connect():
     ssl_context = ssl.create_default_context(cafile=certifi.where())
     try:
         websocket = await websockets.connect(url, ssl=ssl_context, compression="deflate")
-        print(f"[{datetime.now()}] ✅ 웹소켓 연결 성공!")
+        msg = f"✅ 웹소켓 연결 성공!"
+        asyncio.create_task(send_webhook(msg))
+        print(f"[{datetime.now()}]" + msg)
         return websocket
     except Exception as e:
-        print(f"[{datetime.now()}] ❌ 웹소켓 연결 실패: {e}")
+        msg = f"❌ 웹소켓 연결 실패: {e}"
+        await send_webhook(msg)
+        print(f"[{datetime.now()}]" + msg)
         sys.exit(0)

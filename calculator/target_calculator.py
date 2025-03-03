@@ -31,7 +31,7 @@ def process_coin(coin, values, target_dict, lock):
     condition2 = (t1_ma20 < t1_close) and (t1_vwma100 < t1_close)
     condition3 = t1_volume > 3 * t2_volume
     condition4 = current_price > t1_close
-    condition5 = t1_volume * t1_close > 30_000_000
+    condition5 = t1_volume * t1_close > 50_000_000
 
     # 모든 조건을 만족하면 target_dict에 추가
     if condition1 and condition2 and condition3 and condition4 and condition5:

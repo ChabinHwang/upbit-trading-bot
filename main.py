@@ -2,7 +2,6 @@ from manager.websocket_manager import public_websocket_connect
 from manager.coin_data_manager import update_prices, update_indicators_periodically, update_trading_dict, update_wallet_realtime
 from trading import execute_trades
 from shared_resources import *
-from manager.webhook_manager import send_webhook
 
 async def main():
     """
